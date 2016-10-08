@@ -33,7 +33,7 @@ namespace Simple.Web.Server.Middleware
             bool isDowntime;
             if (bool.TryParse(_configuration[AppSettingsConst.IsDowntime], out isDowntime) && isDowntime)
             {
-                context.Response.StatusCode = 502;
+                context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
                 return Task.CompletedTask;
             }
 
