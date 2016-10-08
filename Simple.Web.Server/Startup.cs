@@ -36,6 +36,8 @@ namespace Simple.Web.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddNLog();
+
             app.Map("/ping", subApp =>
             {
                 subApp.UseDowntime(Configuration);
@@ -52,8 +54,6 @@ namespace Simple.Web.Server
             app.UseStaticFiles();
             app.UseIndex();
             app.UseStaticFiles();
-
-            loggerFactory.AddNLog();
         }
     }
 }
