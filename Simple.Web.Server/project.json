@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.0-*",
 
   "dependencies": {
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
@@ -34,7 +34,7 @@
   },
 
   "runtimes": {
-    "win7-x64": {} 
+    "win7-x64": {}
   },
 
   "publishOptions": {
@@ -44,5 +44,9 @@
       "nlog.config",
       "web.config"
     ]
+  },
+
+  "scripts": {
+    "postpublish": "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%"
   }
 }
