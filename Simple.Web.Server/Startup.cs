@@ -1,11 +1,11 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using Simple.Web.Server.Const;
 using Simple.Web.Server.Extensions;
 
 namespace Simple.Web.Server
@@ -20,13 +20,9 @@ namespace Simple.Web.Server
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
             Configuration = builder.Build();
-
-            Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
         }
 
         public IConfigurationRoot Configuration { get; }
-
-        public string Version { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -43,10 +39,12 @@ namespace Simple.Web.Server
                 subApp.UseDowntime(Configuration);
                 subApp.Run(async context =>
                 {
-                    context.Response.StatusCode = 200;
+                    var response = $@"{{""version"":""{Configuration[AppSettingsConst.Version]}""}}";
+                    context.Response.StatusCode = StatusCodes.Status200OK;
                     context.Response.ContentType = "text/json";
+                    context.Response.ContentLength = response.Length;
 
-                    await context.Response.WriteAsync($@"{{""version"":""{Version}""}}");
+                    await context.Response.WriteAsync(response);
                 });
             });
 
