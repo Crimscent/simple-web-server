@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Simple.Web.Server.Const;
 
 namespace Simple.Web.Server.Middleware
 {

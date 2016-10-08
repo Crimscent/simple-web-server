@@ -1,4 +1,4 @@
-﻿namespace Simple.Web.Server.Const
+﻿namespace Simple.Web.Server
 {
     public static class AppSettingsConst
     {
