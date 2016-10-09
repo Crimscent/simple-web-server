@@ -35,7 +35,6 @@ namespace Simple.Web.Server
 
             app.Map("/ping", subApp =>
             {
-                subApp.UseDowntime(Configuration);
                 subApp.Run(async context =>
                 {
                     var response = $@"{{""version"":""{Configuration[AppSettingsConst.Version]}""}}";
@@ -47,7 +46,6 @@ namespace Simple.Web.Server
                 });
             });
 
-            app.UseDowntime(Configuration);
             app.UseStaticFiles();
             app.UseIndex();
             app.UseStaticFiles();
