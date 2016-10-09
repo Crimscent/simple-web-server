@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using Simple.Web.Server.Extensions;
 
 namespace Simple.Web.Server
 {
@@ -23,12 +21,6 @@ namespace Simple.Web.Server
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddNLog();
@@ -37,7 +29,7 @@ namespace Simple.Web.Server
             {
                 subApp.Run(async context =>
                 {
-                    var response = $@"{{""version"":""{Configuration[AppSettingsConst.Version]}""}}";
+                    var response = $@"{{""version"":""{Configuration["Version"]}""}}";
                     context.Response.StatusCode = StatusCodes.Status200OK;
                     context.Response.ContentType = "text/json";
                     context.Response.ContentLength = response.Length;
@@ -47,7 +39,16 @@ namespace Simple.Web.Server
             });
 
             app.UseStaticFiles();
-            app.UseIndex();
+
+            app.Use(next =>
+            {
+                return (context =>
+                {
+                    context.Request.Path = "/index.html";
+                    return next(context);
+                });
+            });
+
             app.UseStaticFiles();
         }
     }
